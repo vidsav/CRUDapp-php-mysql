@@ -55,20 +55,20 @@ $rows = $db->query($sql);
 
   </div>
 </div>
-                  <thead>
+                 <tbody>
                     <tr>
                       <th scope="col">ID</th>
                       <th scope="col">Task</th>
                     </tr>
-                  </thead>
-                  <tbody>
+                
+                 
                     <tr>
                     <?php while($row = $rows->fetch_assoc()): ?>
                         
                       <th><?php echo $row['id'] ?></th>    
                       <td class="col-md-10"><?php echo $row['name'] ?></td>
-                      <td><a href="" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a></td>     
-                      <td><a href="" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></td>     
+                      <td><a href="update.php?id=<?php echo $row['id']; ?>" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a></td>     
+                      <td><a href="delete.php?id=<?php echo $row['id']; ?>" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></td>     
                     </tr>
                       <?php endwhile; ?>
                   </tbody>
