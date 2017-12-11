@@ -2,7 +2,7 @@
 
 include('db.php');
 
-$id = $_GET['id'];
+$id = (int)$_GET['id'];
 
 $sql = "delete from tasks where id = '$id'";
 

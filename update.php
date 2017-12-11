@@ -3,7 +3,7 @@
 <?php include('db.php');
 ini_set('display_errors',1);
 
-$id = $_GET['id'];
+$id = (int)$_GET['id'];
 
 $sql = "select * from tasks where id='$id'";
 
@@ -12,7 +12,7 @@ $rows = $db->query($sql);
 $row = $rows->fetch_assoc();
 
 if(isset($_POST['send'])){
-    $task = $_POST['task'];
+    $task = htmlspecialchars($_POST['task']);
     $sql = "update tasks set name='$task' where id = '$id'";
     $db->query($sql);
     header('location: index.php');
@@ -35,6 +35,7 @@ if(isset($_POST['send'])){
             <div class="row">
                 <div class="col-md-12 text-center">
                     <h2>Edit "<?php echo $row['name']; ?>" task</h2>
+                    <hr>
                 </div>
                 <div class="col-md-12">
                     <form method="post">
@@ -43,6 +44,7 @@ if(isset($_POST['send'])){
                 <input type="text" required name="task" value="<?php echo $row['name']; ?>" class="form-control">
             </div>
             <input type="submit" name="send" value="Edit" class="btn btn-success">
+            <a class="btn btn-secondary" href="index.php">Cancel</a>
         </form>
                 </div>
             </div>

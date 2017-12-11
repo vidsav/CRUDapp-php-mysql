@@ -4,15 +4,11 @@
 
 ini_set('display_errors',1);
 
-$page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
-$perPage = (isset($_GET['per-page']) && (int)($_GET['per-page']) <= 50 ? (int)$_GET['per-page'] : 5);
-$start = ($page > 1) ? ($page * $perPage) - $perPage : 0;
-
-$sql = "select * from tasks limit ".$start." , ".$perPage." ";
-$total = $db->query("select * from tasks")->num_rows;
-$pages = ceil($total / $perPage);
-
-$rows = $db->query($sql);
+if(isset($_POST['search'])){
+    $name = htmlspecialchars($_POST['search']);
+    $sql = "select * from tasks where name like '%$name%' ";
+    $rows = $db->query($sql);
+}
 
 ?>
 <html>
@@ -29,10 +25,17 @@ $rows = $db->query($sql);
         <div class="container">
         <div class="row" style="margin-top:70px;">
             <div class="col-md-12 text-center">
-            <h1>Todo list</h1><br>
+            <h1>(<?php echo mysqli_num_rows($rows); ?>) reults found</h1><br>
             </div>
+            <div class="col-md-12 text-center">
+            <?php if(mysqli_num_rows($rows) < 1): ?>
+            <h2 class="text-danger text-center">No results found! :(</h2><br>
+            <a href="index.php" class="btn btn-danger">Back</a>
+            </div>    
+            <?php else: ?>
                 <div class="table-responsive">
                 <table class="table table-hover">
+                    <a class="btn btn-primary" href="index.php">Back</a>
                     <button type="button" data-target="#myModal" data-toggle="modal" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Add task</button>
                     <button type="button" class="btn btn-default float-right"><i class="fa fa-print" aria-hidden="true" onclick="print()"></i> Print</button>
                     <hr><br>
@@ -79,6 +82,7 @@ $rows = $db->query($sql);
                     <tr>
                     <?php while($row = $rows->fetch_assoc()): ?>
                         
+                        
                         <td><small><?php echo $row['created_time'] ?></small></td>    
                       <td><?php echo $row['id'] ?></td>    
                       <td class="col-md-10"><?php echo $row['name'] ?></td>
@@ -87,28 +91,8 @@ $rows = $db->query($sql);
                     </tr>
                       <?php endwhile; ?>
                   </tbody>
-                </table>
-<nav aria-label="Page navigation example">
-  <ul class="pagination">
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-        <span class="sr-only">Previous</span>
-      </a>
-    </li>
-      <?php for ($i = 1; $i <= $pages; $i++): ?>
-    <li class="page-item"><a class="page-link" href="?page=<?php echo $i; ?>&per-page=<?php echo $perPage; ?>"><?php echo $i; ?></a></li>
-      <?php endfor; ?>
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-        <span class="sr-only">Next</span>
-      </a>
-    </li>
-  </ul>
-</nav>
-
-
+                    </table>
+                    <?php endif; ?>
                 </div>
             </div>
             </div>
