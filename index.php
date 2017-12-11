@@ -3,7 +3,14 @@
 <?php include('db.php');
 
 ini_set('display_errors',1);
-$sql = "select * from tasks";
+
+$page = (isset($_GET['page']) ? $_GET['page'] : 1);
+$perPage = (isset($_GET['per-page']) && ($_GET['per-page']) <= 50 ? $_GET['per-page'] : 5);
+$start = ($page > 1) ? ($page * $perPage) - $perPage : 0;
+
+$sql = "select * from tasks limit ".$start." , ".$perPage." ";
+$total = $db->query("select * from tasks")->num_rows;
+$pages = ceil($total / $perPage);
 
 $rows = $db->query($sql);
 
@@ -57,15 +64,17 @@ $rows = $db->query($sql);
 </div>
                  <tbody>
                     <tr>
+                      <th scope="col">Created</th>  
                       <th scope="col">ID</th>
-                      <th scope="col">Task</th>
+                      <th scope="col">Task</th>   
                     </tr>
                 
                  
                     <tr>
                     <?php while($row = $rows->fetch_assoc()): ?>
                         
-                      <th><?php echo $row['id'] ?></th>    
+                        <td><small><?php echo $row['created_time'] ?></small></td>    
+                      <td><?php echo $row['id'] ?></td>    
                       <td class="col-md-10"><?php echo $row['name'] ?></td>
                       <td><a href="update.php?id=<?php echo $row['id']; ?>" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a></td>     
                       <td><a href="delete.php?id=<?php echo $row['id']; ?>" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></td>     
@@ -73,6 +82,27 @@ $rows = $db->query($sql);
                       <?php endwhile; ?>
                   </tbody>
                 </table>
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+      <?php for ($i = 1; $i <= $pages; $i++): ?>
+    <li class="page-item"><a class="page-link" href="?page=<?php echo $i; ?>&per-page=<?php echo $perPage; ?>"><?php echo $i; ?></a></li>
+      <?php endfor; ?>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+
                 </div>
             </div>
             </div>
