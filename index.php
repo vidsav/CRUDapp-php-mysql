@@ -39,7 +39,10 @@ $rows = $db->query($sql);
                     <div class="col-md-12 text-center">
                 <h3>Search</h3>
                 <form class="form-group" action="search.php" method="post">
-                    <input type="text" placeholder="Search" name="search" class="form-control">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Search" name="search" aria-describedby="basic-addon2">
+                  <span class="input-group-addon" id="basic-addon2"><i class="fa fa-search" aria-hidden="true"></i></span>
+                </div>
                 </form>
             </div><br>
                     <!-- Modal -->
